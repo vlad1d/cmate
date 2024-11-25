@@ -15,7 +15,7 @@ npm install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-npx tailwindcss -i ./public/input.css -o ./public/output.css --watch
+npx tailwindcss -i ./public/input.css -o ./public/output.css
 npm run dev
 ```
 
@@ -24,6 +24,6 @@ npm run dev
 Build the application for production:
 
 ```bash
-npx tailwindcss -i ./public/input.css -o ./public/output.css --watch
+npx tailwindcss -i ./public/input.css -o ./public/output.css
 npm run build
 ```
