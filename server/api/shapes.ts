@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event);
 
     const user = getUser(event, userManager, Number(query.uid));
-
     switch (method) {
         case 'GET':
             return handleGetRequest(event, user);

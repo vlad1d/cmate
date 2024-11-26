@@ -20,8 +20,8 @@ export async function handlePutRequest(event: H3Event, user: User) {
     const query = getQuery(event);
     const putBody = await readBody(event);
     const putId = Number(query.sid);
-    const { new_x, new_y, new_z } = putBody;
-    return user.changeShapePosition(putId, new_x, new_y, new_z);
+    const { x, y, z } = putBody;
+    return user.changeShapePosition(putId, x, y, z);
 }
 
 export async function handleDeleteRequest(event: H3Event, user: User) {

@@ -1,14 +1,21 @@
 import { Shape } from "../models/Shape";
 import { Cube } from "../models/Cube";
 import { Sphere } from "../models/Sphere";
-import { Prism } from "../models/Prism";
+import { Cone } from "../models/Cone";
+import { Cylinder } from "../models/Cylinder";
 
 export class ShapeManager {
     private shapes: Shape[] = [];
     private id: number = 0;
 
-    getShapes(): Shape[] {
-        return this.shapes;
+    getShapes(): { id: number, x: number, y: number, z: number, type: string }[] {
+        return this.shapes.map(shape => ({
+                id: shape.id,
+                x: shape.x,
+                y: shape.y,
+                z: shape.z,
+                type: shape.getType()
+            }));
     }
 
     createShape(type: string, x: number, y: number, z: number): Shape {
@@ -20,8 +27,11 @@ export class ShapeManager {
             case 'sphere':
                 shape = new Sphere(this.id++, x, y, z);
                 break;
-            case 'prism':
-                shape = new Prism(this.id++, x, y, z);
+            case 'cone':
+                shape = new Cone(this.id++, x, y, z);
+                break;
+            case 'cylinder':
+                shape = new Cylinder(this.id++, x, y, z);
                 break;
             default:
                 throw new Error('Invalid shape type');

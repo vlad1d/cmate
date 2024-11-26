@@ -1,7 +1,7 @@
 import { Shape } from './Shape';
 
-export class Prism extends Shape {
+export class Cylinder extends Shape {
     getType(): string {
-        return 'prism';
+        return 'cylinder';
     }
 }

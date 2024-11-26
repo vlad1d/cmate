@@ -1,11 +1,19 @@
 
-const apiUrl = 'https://localhost:3000/api/shapes'; //to change
+const apiUrl = 'http://localhost:3000/api/shapes'; //to change
 const userId = 1; //to change
 
 async function apiRequest(endpoint, options = {}) {
     const url = apiUrl + endpoint + `?uid=${userId}`;
-    const response = await fetch(url, options);
-    return response.json();
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+    }
 }
 
 export async function getShapes() {

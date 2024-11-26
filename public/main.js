@@ -1,27 +1,58 @@
+import { getShapes, updateShape } from './api.js';
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const boxGeometry = new THREE.BoxGeometry();
-const cubeMaterial = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, transparent: true, opacity: 0.7 });
-const cube = new THREE.Mesh(boxGeometry, cubeMaterial);
-const cube2 = new THREE.Mesh(boxGeometry, cubeMaterial);
-
-const sphereGeometry = new THREE.SphereGeometry();
-const sphereMaterial = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, transparent: true, opacity: 0.7 });
-const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-
 const shapes = [];
-shapes.push(cube);
-shapes.push(sphere);
 
-shapes.forEach(shape => {
-    shape.position.x = (Math.random()) * 10 - 5;
-    shape.position.y = (Math.random()) * 10 - 5;
-    scene.add(shape);
-});
+async function loadShapes() {
+    const shapesData = await getShapes();
+    shapesData.forEach(shapeData => {
+        let geometry;
+        let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, transparent: true, opacity: 0.7 });
+        switch (shapeData.type) {
+            case 'cube':
+                geometry = new THREE.BoxGeometry();
+                break;
+            case 'sphere':
+                geometry = new THREE.SphereGeometry();
+                break;
+            case 'cone':
+                geometry = new THREE.ConeGeometry();
+                break;
+            case 'cylinder':
+                geometry = new THREE.CylinderGeometry();
+                break;
+            case 'default':
+                console.error('Unknown shape type');
+                break;
+        }
+        const shape = new THREE.Mesh(geometry, material);
+        shape.position.set(shapeData.x, shapeData.y, shapeData.z);
+        shape.userData.id = shapeData.id;
+        shapes.push(shape);
+    })
+
+    shapes.forEach(shape => {
+        scene.add(shape);
+    });
+    
+}
+
+async function changeShapePosition(shape, x, y, z) {
+    const roundedX = Math.round(x * 1000) / 1000;
+    const roundedY = Math.round(y * 1000) / 1000;
+    const roundedZ = Math.round(z * 1000) / 1000;
+    console.log('Updating shape position:', shape.userData.id, roundedX, roundedY, roundedZ);
+    try {
+        await updateShape(shape.userData.id, roundedX, roundedY, roundedZ);
+    } catch (error) {
+        console.error('Failed to update shape position:', error);
+    }
+}
 
 camera.position.z = 5;
 
@@ -70,6 +101,9 @@ window.addEventListener('mousedown', (event) => {
 
 window.addEventListener('mouseup', () => {
     isDragging = false;
+    if (selectedShape) {
+        changeShapePosition(selectedShape, selectedShape.position.x, selectedShape.position.y, selectedShape.position.z);
+    }
 });
 
 window.addEventListener('mousemove', (event) => {
@@ -96,3 +130,5 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+loadShapes();
