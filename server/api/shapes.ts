@@ -1,33 +1,28 @@
-import { ShapeManager } from '../managers/ShapeManager';
-import { defineEventHandler, getQuery, readBody, setResponseStatus } from 'h3';
+import { UserManager } from '../managers/UserManager';
+import { defineEventHandler, getQuery } from 'h3';
+import { handleGetRequest, handlePostRequest, handlePutRequest, handleDeleteRequest } from './handlers';
+import { getUser } from './utils';
 
-const shapeManager = new ShapeManager();
+const userManager = new UserManager();
+userManager.createUser('Vlad', '1234');
+userManager.createUser('CreatorMate', 'Vlad');
 
 export default defineEventHandler(async (event) => {
     const method = event.node.req.method;
-    console.log(`HTTP Method: ${method}`); // Add logging
     const query = getQuery(event);
-    const body = await readBody(event);
+
+    const user = getUser(event, userManager, Number(query.uid));
+
     switch (method) {
         case 'GET':
-            console.log('Handling GET request');
-            return;
+            return handleGetRequest(event, user);
         case 'POST':
-            console.log('Handling POST request');
-            const {type, x, y, z} = body;
-            return shapeManager.createShape(type, x, y, z);
+            return handlePostRequest(event, user);
         case 'PUT':
-            console.log('Handling PUT request');
-            const putId = Number(query.id);
-            const {new_x, new_y, new_z} = body;
-            return shapeManager.changePosition(putId, new_x, new_y, new_z);
+            return handlePutRequest(event, user);
         case 'DELETE':
-            console.log('Handling DELETE request');
-            const deleteId = Number(query.id);
-            shapeManager.deleteShape(deleteId);
-            return;
+            return handleDeleteRequest(event, user);
         default:
-            console.log('Invalid method');
             throw new Error('Invalid method');
     }
 });

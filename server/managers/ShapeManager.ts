@@ -42,7 +42,7 @@ export class ShapeManager {
         return shape;
     }
 
-    changePosition(id: number, new_x: number, new_y: number, new_z: number): Shape {
+    changeShapePosition(id: number, new_x: number, new_y: number, new_z: number): Shape {
         const shape = this.getShapeById(id);
         shape.x = new_x;
         shape.y = new_y;
