@@ -1,15 +1,24 @@
-
-const apiUrl = 'http://localhost:3000/api/shapes'; //to change
+const apiUrl = 'http://localhost:3000/api/shapes/'; //to change
 const userId = 1; //to change
 
-async function apiRequest(endpoint, options = {}) {
-    const url = apiUrl + endpoint + `?uid=${userId}`;
+async function apiRequest(url, options = {}) {
     try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(response.statusText);
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            body: options.body ? JSON.stringify(options.body) : undefined
+        });
+        if (response.status === 204) {
+            return null; // No content to parse
         }
-        return response.json();
+        const responseBody = await response.text();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return JSON.parse(responseBody);
     } catch (error) {
         console.error('API request failed:', error);
         throw error;
@@ -17,37 +26,37 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 export async function getShapes() {
-    return apiRequest('/');
+    const url = apiUrl + `?uid=${userId}`;
+    return apiRequest(url);
 }
 
 export async function getShapeById(id) {
-    return apiRequest(`/${id}`);
+    const url = apiUrl + `?uid=${userId}&sid=${id}`;
+    return apiRequest(url);
 }
 
-export async function createShape(type, x, y, z) {
-    return apiRequest('/', {
+export async function createShape(type) {
+    const x = 0;
+    const y = 0;
+    const z = 0;
+    const url = apiUrl + `?uid=${userId}`;
+    return apiRequest(url, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ type, x, y, z })
+        body: { type, x, y, z }
     });
 }
 
 export async function updateShape(id, x, y, z) {
-    return apiRequest(`/${id}`, {
+    const url = apiUrl + `?uid=${userId}&sid=${id}`;
+    return apiRequest(url, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ x, y, z })
+        body: { x, y, z }
     });
 }
 
 export async function deleteShape(id) {
-    return apiRequest(`/${id}`, {
+    const url = apiUrl + `?uid=${userId}&sid=${id}`;
+    return apiRequest(url, {
         method: 'DELETE'
     });
 }
-
-

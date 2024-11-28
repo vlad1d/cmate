@@ -1,4 +1,4 @@
-import { getShapes, updateShape } from './api.js';
+import { getShapes, updateShape, createShape, deleteShape, getShapeById } from './api.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -8,38 +8,38 @@ document.body.appendChild(renderer.domElement);
 
 const shapes = [];
 
+async function addShape(shapeData) {
+    let geometry;
+    let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, transparent: true, opacity: 0.7 });
+    switch (shapeData.type) {
+        case 'cube':
+            geometry = new THREE.BoxGeometry();
+            break;
+        case 'sphere':
+            geometry = new THREE.SphereGeometry();
+            break;
+        case 'cone':
+            geometry = new THREE.ConeGeometry();
+            break;
+        case 'cylinder':
+            geometry = new THREE.CylinderGeometry();
+            break;
+        default:
+            console.error('Unknown shape type');
+            return;
+    }
+    const shape = new THREE.Mesh(geometry, material);
+    shape.position.set(shapeData.x, shapeData.y, shapeData.z);
+    shape.userData.id = shapeData.id;
+    shapes.push(shape);
+    scene.add(shape);
+}
+
 async function loadShapes() {
     const shapesData = await getShapes();
     shapesData.forEach(shapeData => {
-        let geometry;
-        let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, transparent: true, opacity: 0.7 });
-        switch (shapeData.type) {
-            case 'cube':
-                geometry = new THREE.BoxGeometry();
-                break;
-            case 'sphere':
-                geometry = new THREE.SphereGeometry();
-                break;
-            case 'cone':
-                geometry = new THREE.ConeGeometry();
-                break;
-            case 'cylinder':
-                geometry = new THREE.CylinderGeometry();
-                break;
-            case 'default':
-                console.error('Unknown shape type');
-                break;
-        }
-        const shape = new THREE.Mesh(geometry, material);
-        shape.position.set(shapeData.x, shapeData.y, shapeData.z);
-        shape.userData.id = shapeData.id;
-        shapes.push(shape);
-    })
-
-    shapes.forEach(shape => {
-        scene.add(shape);
+        addShape(shapeData);
     });
-    
 }
 
 async function changeShapePosition(shape, x, y, z) {
@@ -57,11 +57,10 @@ async function changeShapePosition(shape, x, y, z) {
 camera.position.z = 5;
 
 let isDragging = false;
-let mousePosition = {
-    x: 0,
-    y: 0
-}
+let mousePosition = { x: 0, y: 0 };
 let selectedShape = null;
+let dragThreshold = 5;
+let initialMousePosition = { x: 0, y: 0 };
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -77,6 +76,7 @@ function animate() {
 animate();
 
 window.addEventListener('mousedown', (event) => {
+    initialMousePosition = { x: event.clientX, y: event.clientY };
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -92,16 +92,22 @@ window.addEventListener('mousedown', (event) => {
         // make the selected shape fully opaque
         selectedShape.material.opacity = 1;
         isDragging = true;
-        mousePosition = {
-            x: event.clientX,
-            y: event.clientY
-        };
+        mousePosition = { x: event.clientX, y: event.clientY };
     }
 });
 
-window.addEventListener('mouseup', () => {
+window.addEventListener('mouseup', (event) => {
     isDragging = false;
-    if (selectedShape) {
+    const distance = Math.sqrt(
+        Math.pow(event.clientX - initialMousePosition.x, 2) +
+        Math.pow(event.clientY - initialMousePosition.y, 2)
+    );
+
+    if (distance < dragThreshold && selectedShape) {
+        // Handle click
+        console.log('Shape clicked:', selectedShape.userData.id);
+    } else if (selectedShape) {
+        // Handle drag end
         changeShapePosition(selectedShape, selectedShape.position.x, selectedShape.position.y, selectedShape.position.z);
     }
 });
@@ -118,10 +124,7 @@ window.addEventListener('mousemove', (event) => {
         selectedShape.rotation.x += deltaMove.y * 0.008;
         selectedShape.rotation.y += deltaMove.x * 0.008;
 
-        mousePosition = {
-            x: event.clientX,
-            y: event.clientY
-        }
+        mousePosition = { x: event.clientX, y: event.clientY };
     }
 });
 
@@ -131,4 +134,32 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-loadShapes();
+window.addEventListener('DOMContentLoaded', () => {
+    loadShapes();
+
+    const newButtons = document.querySelectorAll('.new-button');
+    newButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            console.log('click!');
+            const id = button.getAttribute('id');
+            try {
+                const shape = await createShape(id);
+                if (shape) {
+                    addShape(shape);
+                }
+                else console.error('Failed to create shape:', error);
+            } catch (error) {
+                console.error('Failed to create shape:', error);
+            }
+        });
+    });
+
+    const deleteButton = document.querySelector('.del-button');
+    deleteButton.addEventListener('click', async () => {
+        if (selectedShape) {
+            await deleteShape(selectedShape.userData.id);
+            scene.remove(selectedShape);
+            selectedShape = null;
+        }
+    });
+});

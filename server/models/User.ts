@@ -15,7 +15,7 @@ export class User {
     }
 
     createShape(type: string, x: number, y: number, z: number) {
-        this.shapeManager.createShape(type, x, y, z);
+        return this.shapeManager.createShape(type, x, y, z);
     }
 
     deleteShape(id: number) {

@@ -13,7 +13,14 @@ export async function handleGetRequest(event: H3Event, user: User) {
 export async function handlePostRequest(event: H3Event, user: User) {
     const postBody = await readBody(event);
     const { type, x, y, z } = postBody;
-    return user.createShape(type, x, y, z);
+    const shape = user.createShape(type, x, y, z);
+    return {
+        id: shape.id,
+        x: shape.x,
+        y: shape.y,
+        z: shape.z,
+        type: shape.getType()
+    };
 }
 
 export async function handlePutRequest(event: H3Event, user: User) {

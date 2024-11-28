@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes rainbow {
+    0% { background-color: #f87171; } 
+    14% { background-color: #fb923c; } 
+    28% { background-color: #facc15; } 
+    42% { background-color: #4ade80; } 
+    57% { background-color: #60a5fa; } 
+    71% { background-color: #818cf8; } 
+    85% { background-color: #a78bfa; } 
+    100% { background-color: #f87171; } 
+}
+
+.main {
+    @apply m-0 p-0 h-full w-full overflow-hidden bg-black;
+}
+
+.new-button-container {
+    @apply fixed bottom-5 right-5 flex flex-col space-y-6;
+}
+
+.del-button {
+    @apply fixed bottom-5 right-52 w-20 h-20 bg-white text-black border-none rounded-full flex items-center justify-center text-2xl cursor-pointer transition-transform duration-200;
+    z-index: 10;
+}
+
+.del-button:hover {
+    @apply transform scale-110 shadow-lg bg-red-400 text-white;
+    transition: transform 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.del-button:active {
+    @apply transform scale-90;
+}
+
+.col-button {
+    @apply fixed bottom-5 right-28 w-20 h-20 bg-white text-black border-none rounded-full flex items-center justify-center text-2xl cursor-pointer transition-transform duration-200;
+    z-index: 10;
+}
+
+.col-button:hover {
+    @apply transform scale-110 shadow-lg text-white;
+    animation: rainbow 2s linear infinite;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.col-button:active {
+    @apply transform scale-90;
+}
+
+.new-button {
+    @apply w-20 h-20 bg-white text-black border-none rounded-full flex items-center justify-center text-2xl cursor-pointer transition-transform duration-200;
+    z-index: 10;
+}
+
+.new-button:hover {
+    @apply transform scale-110 shadow-lg bg-red-400 text-white;
+    transition: transform 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.new-button:active {
+    @apply transform scale-90;
+}
