@@ -1,9 +1,11 @@
 
 
-const apiUrl = 'http://localhost:3000/api/shapes/'; //to change
+const apiUrl = 'http://localhost:3000/api/shapes/'; // of course this would not be hardcoded in a real application
 
+// Handle general API requests by using the native fetch API
 async function apiRequest(url, options = {}) {
     try {
+        // Add the Content-Type header and stringify the body if it exists
         const response = await fetch(url, {
             ...options,
             headers: {
@@ -15,6 +17,7 @@ async function apiRequest(url, options = {}) {
         if (response.status === 204) {
             return null; // No content to parse
         }
+        // Parse the response body as JSON and return
         const responseBody = await response.text();
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -26,6 +29,7 @@ async function apiRequest(url, options = {}) {
     }
 }
 
+// Get the user ID from local storage. If there is none, throw an error
 function getUserId() {
     const user = localStorage.getItem('userId');
     if (!user) {
@@ -51,7 +55,7 @@ export async function createShape(type) {
     const x = 0;
     const y = 0;
     const z = 0;
-    const color = '#ffffff';
+    const color = '#ffffff'; // by default, shapes are white
     const url = apiUrl + `?uid=${userId}`;
     return apiRequest(url, {
         method: 'POST',

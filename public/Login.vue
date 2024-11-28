@@ -28,6 +28,7 @@ export default {
   methods: {
     async login() {
       try {
+        // send a POST request with the username and password
         const response = await fetch('/api/login', {
           method: 'POST',
           headers: {
@@ -39,6 +40,7 @@ export default {
           })
         });
         const data = await response.json();
+        // if the response is successful, store the user ID in local storage
         if (data.res) {
           localStorage.setItem('userId', data.userId);
           window.location.href = '/main';

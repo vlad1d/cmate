@@ -2,6 +2,7 @@ import sequelize from './config/database';
 import { User } from './models/User';
 import { Shape, associateModels } from './models/Shape';
 
+// Initialize the database connection and hardcode some users in the database
 const init = async () => {
     try {
         await sequelize.authenticate();

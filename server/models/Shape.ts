@@ -1,6 +1,8 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
+
+// Define a shape model which has an id, a type (cube, sphere, etc), coordinates and a color. Can easily add more features.
 export class Shape extends Model {
 }
 

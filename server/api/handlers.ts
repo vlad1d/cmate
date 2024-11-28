@@ -2,6 +2,7 @@ import { H3Event, readBody } from 'h3';
 import { User } from '../models/User';
 import { Shape } from '../models/Shape';
 
+// Handle all GET requests by checking if the query contains a shape ID. If it does, return the shape with that ID. If it doesn't, return all shapes.
 export async function handleGetRequest(event: H3Event, user: User) {
     const query = getQuery(event);
     if (query.sid) {
@@ -11,12 +12,14 @@ export async function handleGetRequest(event: H3Event, user: User) {
     return await Shape.findAll({ where: { userId: user.id } });
 }
 
+// Handle all POST requests by creating a new shape with the provided data.
 export async function handlePostRequest(event: H3Event, user: User) {
     const postBody = await readBody(event);
     const { type, color, x, y, z } = postBody;
     return await Shape.create({ type, color, x, y, z, userId: user.id });
 }
 
+// PUT requests depending on the request. If it is a put color request, update the color of the shape. If it is a put position request, update the position of the shape.
 export async function handlePutRequest(event: H3Event, user: User) {
     const query = getQuery(event);
     const putBody = await readBody(event);
@@ -33,11 +36,13 @@ export async function handlePutRequest(event: H3Event, user: User) {
     }
 }
 
+// Use the update method to update the color of the shape.
 async function handleColorPutRequest(shape: Shape, color: string) {
     await shape.update({ color });
     return shape;
 }
 
+// Use the update method to update the position of the shape. Important to parse the values to integers before updating.
 async function handlePositionPutRequest(shape: Shape, putBody: any) {
     const updateData: any = {};
 
@@ -54,6 +59,7 @@ async function handlePositionPutRequest(shape: Shape, putBody: any) {
     return shape;
 }
 
+// Handle DELETE requests by deleting the shape with the provided ID with the destroy method.
 export async function handleDeleteRequest(event: H3Event, user: User) {
     const query = getQuery(event);
     const deleteId = Number(query.sid);

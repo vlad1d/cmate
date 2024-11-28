@@ -2,13 +2,12 @@ import { defineEventHandler, getQuery } from 'h3';
 import { handleGetRequest, handlePostRequest, handlePutRequest, handleDeleteRequest } from './handlers';
 import { getUser } from './utils';
 
+// Handle all requests by checking the method and calling the appropriate handler.
 export default defineEventHandler(async (event) => {
     const method = event.node.req.method;
     const query = getQuery(event);
 
     const user = await getUser(event, Number(query.uid));
-    console.log('user', user);
-    console.log('query', query);
     switch (method) {
         case 'GET':
             return handleGetRequest(event, user);

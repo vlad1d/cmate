@@ -1,3 +1,7 @@
+/**
+ * Module manipulates the shapes in the created scene. This is what makes it create, delete, etc in real time.
+ */
+
 import * as THREE from 'three';
 import { scene } from './scene.js';
 import { getShapes, updateShapePosition, updateShapeColor, createShape, deleteShape } from './api.js';
@@ -28,6 +32,8 @@ async function addShape(shapeData) {
     const color = shapeData.color ? parseInt(shapeData.color.replace('#', '0x')) : 0xffffff;
     let geometry;
     let material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.7 });
+    
+    // create the shape based on the type selected, can easily add more shapes
     switch (shapeData.type) {
         case 'cube':
             geometry = new THREE.BoxGeometry();
@@ -52,6 +58,7 @@ async function addShape(shapeData) {
     scene.add(shape);
 }
 
+// remove the shape from the scene and the shapes array
 async function removeShape(shape) {
     try {
         await deleteShape(shape.userData.id);
@@ -73,6 +80,7 @@ async function changeShapePosition(shape, x, y, z) {
     }
 }
 
+// change the color of the shape by generating a random color
 async function changeShapeColor(shape) {
     const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
     try {

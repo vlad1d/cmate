@@ -3,6 +3,7 @@ import * as THREE from 'three';
 let scene, camera, renderer;
 
 if (process.client) {
+    // set the scene and camera
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer();
@@ -11,6 +12,7 @@ if (process.client) {
 
     camera.position.z = 5;
 
+    // animate the scene so that shapes rotate
     function animate() {
         requestAnimationFrame(animate);
         scene.children.forEach(shape => {
@@ -21,6 +23,7 @@ if (process.client) {
     }
     animate();
 
+    // support resizing the window
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();

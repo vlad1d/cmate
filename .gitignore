@@ -23,4 +23,6 @@ logs
 .env.*
 !.env.example
 
-public/output.css
+public/css/app.css
+public/css/login.css
+public/css/main.css
