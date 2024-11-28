@@ -16,6 +16,7 @@ Start the development server on `http://localhost:3000`:
 
 ```bash
 npx tailwindcss -i ./public/input.css -o ./public/output.css
+npm run init-db
 npm run dev
 ```
 
@@ -25,5 +26,6 @@ Build the application for production:
 
 ```bash
 npx tailwindcss -i ./public/input.css -o ./public/output.css
+npm run init-db
 npm run build
 ```

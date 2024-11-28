@@ -1,13 +1,12 @@
-import { UserManager } from '../managers/UserManager';
 import { H3Event, setResponseStatus } from 'h3';
+import { User } from '../models/User';
 
-export function getUser(event: H3Event, userManager: UserManager, uid: number) {
-    let user;
-    try {
-        user = userManager.getUserById(uid);
-    } catch (e) {
+export async function getUser(event: H3Event, uid: number) {
+    const user = await User.findOne({ where: { id: uid } });
+    
+    if (!user) {
         setResponseStatus(event, 400);
-        throw new Error('No user selected.');
+        throw new Error('User not found');
     }
     return user;
 }

@@ -1,32 +1,25 @@
-import { ShapeManager } from '../managers/ShapeManager';
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../config/database';
+import { Shape } from './Shape';
 
-export class User {
-    private shapeManager: ShapeManager;
-    constructor(public id: number, public name: string, private password: string) {
-        this.shapeManager = new ShapeManager();
-    }
-
-    getShapes() {
-        return this.shapeManager.getShapes();
-    }
-
-    getShapeById(id: number) {
-        return this.shapeManager.getShapeById(id);
-    }
-
-    createShape(type: string, color:string, x: number, y: number, z: number) {
-        return this.shapeManager.createShape(type, color, x, y, z);
-    }
-
-    deleteShape(id: number) {
-        this.shapeManager.deleteShape(id);
-    }
-
-    changeShapePosition (id: number, x: number, y: number, z: number) {
-        this.shapeManager.changeShapePosition(id, x, y, z);
-    }
-
-    changeShapeColor (id: number, color: string) {
-        this.shapeManager.changeShapeColor(id, color);
-    }
+export class User extends Model {
 }
+
+User.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}, {
+    sequelize,
+    modelName: 'User',
+});

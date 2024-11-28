@@ -1,17 +1,14 @@
-import { UserManager } from '../managers/UserManager';
 import { defineEventHandler, getQuery } from 'h3';
 import { handleGetRequest, handlePostRequest, handlePutRequest, handleDeleteRequest } from './handlers';
 import { getUser } from './utils';
-
-const userManager = new UserManager();
-userManager.createUser('Vlad', '1234');
-userManager.createUser('CreatorMate', 'Vlad');
 
 export default defineEventHandler(async (event) => {
     const method = event.node.req.method;
     const query = getQuery(event);
 
-    const user = getUser(event, userManager, Number(query.uid));
+    const user = await getUser(event, Number(query.uid));
+    console.log('user', user);
+    console.log('query', query);
     switch (method) {
         case 'GET':
             return handleGetRequest(event, user);
