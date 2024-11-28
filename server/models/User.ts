@@ -14,8 +14,8 @@ export class User {
         return this.shapeManager.getShapeById(id);
     }
 
-    createShape(type: string, x: number, y: number, z: number) {
-        return this.shapeManager.createShape(type, x, y, z);
+    createShape(type: string, color:string, x: number, y: number, z: number) {
+        return this.shapeManager.createShape(type, color, x, y, z);
     }
 
     deleteShape(id: number) {
@@ -24,5 +24,9 @@ export class User {
 
     changeShapePosition (id: number, x: number, y: number, z: number) {
         this.shapeManager.changeShapePosition(id, x, y, z);
+    }
+
+    changeShapeColor (id: number, color: string) {
+        this.shapeManager.changeShapeColor(id, color);
     }
 }

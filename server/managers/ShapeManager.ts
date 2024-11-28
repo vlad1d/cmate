@@ -11,27 +11,28 @@ export class ShapeManager {
     getShapes(): { id: number, x: number, y: number, z: number, type: string }[] {
         return this.shapes.map(shape => ({
                 id: shape.id,
+                type: shape.getType(),
+                color: shape.color,
                 x: shape.x,
                 y: shape.y,
-                z: shape.z,
-                type: shape.getType()
+                z: shape.z
             }));
     }
 
-    createShape(type: string, x: number, y: number, z: number): Shape {
+    createShape(type: string, color: string, x: number, y: number, z: number): Shape {
         let shape: Shape;
         switch (type) {
             case 'cube':
-                shape = new Cube(this.id++, x, y, z);
+                shape = new Cube(this.id++, x, y, z, color);
                 break;
             case 'sphere':
-                shape = new Sphere(this.id++, x, y, z);
+                shape = new Sphere(this.id++, x, y, z, color);
                 break;
             case 'cone':
-                shape = new Cone(this.id++, x, y, z);
+                shape = new Cone(this.id++, x, y, z, color);
                 break;
             case 'cylinder':
-                shape = new Cylinder(this.id++, x, y, z);
+                shape = new Cylinder(this.id++, x, y, z, color);
                 break;
             default:
                 throw new Error('Invalid shape type');
@@ -57,6 +58,12 @@ export class ShapeManager {
         shape.x = new_x;
         shape.y = new_y;
         shape.z = new_z;
+        return shape;
+    }
+
+    changeShapeColor(id: number, new_color: string): Shape {
+        const shape = this.getShapeById(id);
+        shape.color = new_color;
         return shape;
     }
 }

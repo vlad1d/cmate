@@ -1,4 +1,4 @@
-import { getShapes, updateShape, createShape, deleteShape, getShapeById } from './api.js';
+import { getShapes, updateShapePosition, updateShapeColor, createShape, deleteShape } from './api.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -9,8 +9,9 @@ document.body.appendChild(renderer.domElement);
 const shapes = [];
 
 async function addShape(shapeData) {
+    const color = shapeData.color ? parseInt(shapeData.color.replace('#', '0x')) : 0xffffff;
     let geometry;
-    let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, transparent: true, opacity: 0.7 });
+    let material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.7 });
     switch (shapeData.type) {
         case 'cube':
             geometry = new THREE.BoxGeometry();
@@ -48,7 +49,7 @@ async function changeShapePosition(shape, x, y, z) {
     const roundedZ = Math.round(z * 1000) / 1000;
     console.log('Updating shape position:', shape.userData.id, roundedX, roundedY, roundedZ);
     try {
-        await updateShape(shape.userData.id, roundedX, roundedY, roundedZ);
+        await updateShapePosition(shape.userData.id, roundedX, roundedY, roundedZ);
     } catch (error) {
         console.error('Failed to update shape position:', error);
     }
@@ -160,6 +161,19 @@ window.addEventListener('DOMContentLoaded', () => {
             await deleteShape(selectedShape.userData.id);
             scene.remove(selectedShape);
             selectedShape = null;
+        }
+    });
+
+    const colorButton = document.querySelector('.col-button');
+    colorButton.addEventListener('click', async () => {
+        if (selectedShape) {
+            const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+            try {
+                await updateShapeColor(selectedShape.userData.id, color);
+                selectedShape.material.color.set(color);
+            } catch (error) {
+                console.error('Failed to update shape color:', error);
+            }
         }
     });
 });

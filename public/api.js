@@ -39,18 +39,28 @@ export async function createShape(type) {
     const x = 0;
     const y = 0;
     const z = 0;
+    const color = '#ffffff';
     const url = apiUrl + `?uid=${userId}`;
     return apiRequest(url, {
         method: 'POST',
-        body: { type, x, y, z }
+        body: { type, color, x, y, z }
     });
 }
 
-export async function updateShape(id, x, y, z) {
+export async function updateShapePosition(id, x, y, z) {
     const url = apiUrl + `?uid=${userId}&sid=${id}`;
     return apiRequest(url, {
         method: 'PUT',
         body: { x, y, z }
+    });
+}
+
+export async function updateShapeColor(id, color) {
+    const url = apiUrl + `?uid=${userId}&sid=${id}`;
+    console.log("now updating color for shape with id: " + id + " to color: " + color);
+    return apiRequest(url, {
+        method: 'PUT',
+        body: { color }
     });
 }
 

@@ -12,8 +12,8 @@ export async function handleGetRequest(event: H3Event, user: User) {
 
 export async function handlePostRequest(event: H3Event, user: User) {
     const postBody = await readBody(event);
-    const { type, x, y, z } = postBody;
-    const shape = user.createShape(type, x, y, z);
+    const { type, color, x, y, z } = postBody;
+    const shape = user.createShape(type, color, x, y, z);
     return {
         id: shape.id,
         x: shape.x,
@@ -27,8 +27,16 @@ export async function handlePutRequest(event: H3Event, user: User) {
     const query = getQuery(event);
     const putBody = await readBody(event);
     const putId = Number(query.sid);
-    const { x, y, z } = putBody;
-    return user.changeShapePosition(putId, x, y, z);
+    const { x, y, z, color } = putBody;
+
+    if (x !== undefined && y !== undefined && z !== undefined) {
+        user.changeShapePosition(putId, x, y, z);
+    }
+    if (color !== undefined) {
+        user.changeShapeColor(putId, color);
+    }
+
+    return user.getShapeById(putId);
 }
 
 export async function handleDeleteRequest(event: H3Event, user: User) {
