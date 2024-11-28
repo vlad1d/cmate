@@ -57,7 +57,6 @@ export async function updateShapePosition(id, x, y, z) {
 
 export async function updateShapeColor(id, color) {
     const url = apiUrl + `?uid=${userId}&sid=${id}`;
-    console.log("now updating color for shape with id: " + id + " to color: " + color);
     return apiRequest(url, {
         method: 'PUT',
         body: { color }
