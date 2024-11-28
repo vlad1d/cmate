@@ -12,5 +12,5 @@
   </template>
     
   <style scoped>
-  @import './public/css/main.css';
+  @import './css/main.css';
   </style>

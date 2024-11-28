@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 html, body {
-    @apply m-0 overflow-hidden
+    @apply m-0 h-full w-full overflow-hidden bg-black
 }

@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    @apply h-full w-full m-0 p-0 bg-black !important;
+}
+
+#app {
+    @apply h-full w-full flex items-center justify-center bg-black;
+}
+
+.login-container {
+    @apply flex flex-col items-center justify-center h-full w-full bg-black mt-52;
+}
+
+.login-container h1 {
+    @apply text-4xl text-white mb-8;
+}
+
+.login-container form {
+    @apply bg-white p-8 rounded-lg shadow-lg max-w-md w-full;
+}
+
+.login-container label {
+    @apply block text-lg mb-2;
+}
+
+.login-container input {
+    @apply w-full p-2 mb-4 border border-gray-300 rounded;
+}
+
+.login-container button {
+    @apply w-full p-2 bg-black text-white rounded hover:bg-gray-700 transition-colors duration-200;
+}
+
+.login-container p {
+    @apply text-red-500 mt-4;
+}
