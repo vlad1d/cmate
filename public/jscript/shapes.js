@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { scene } from './scene.js';
 import { getShapes, updateShapePosition, updateShapeColor, createShape, deleteShape } from './api.js';
 

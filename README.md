@@ -15,7 +15,8 @@ npm install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-npx tailwindcss -i ./public/input.css -o ./public/output.css
+npx tailwindcss -i ./public/css/iapp.css -o ./public/css/app.css
+npx tailwindcss -i ./public/css/imain.css -o ./public/css/main.css
 npm run init-db
 npm run dev
 ```
